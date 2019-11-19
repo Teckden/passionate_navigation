@@ -1,0 +1,17 @@
+{
+  "vertical": {
+    "type": "object",
+    "required": ["type", "id", "attributes"],
+    "properties": {
+      "type": { "type":  "string"},
+      "id": { "type":  "integer" },
+      "attributes": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" }
+        }
+      }
+    }
+  }
+}

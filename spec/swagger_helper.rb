@@ -19,7 +19,32 @@ RSpec.configure do |config|
         title: 'API V1',
         version: 'v1'
       },
-      paths: {}
+      paths: {},
+      definitions: {
+        errors: {
+          "type": "object",
+          "required": ["errors"],
+          "properties": {
+            "errors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["title"],
+                "properties": { "title": { "type": "string" } }
+              }
+            }
+          }
+        },
+        verticals: {
+          vertical: JSON.load(Rails.root.join('spec/support/schemas/api/v1/verticals/_vertical.json')),
+          index: {
+            success: JSON.load(Rails.root.join('spec/support/schemas/api/v1/verticals/index.json'))
+          },
+          show: {
+            success: JSON.load(Rails.root.join('spec/support/schemas/api/v1/verticals/show.json'))
+          }
+        }
+      }
     }
   }
 

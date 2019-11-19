@@ -3,4 +3,260 @@ openapi: 3.0.1
 info:
   title: API V1
   version: v1
-paths: {}
+paths:
+  "/api/v1/verticals":
+    get:
+      summary: Retrieves the list of verticals
+      tags:
+      - Verticals
+      responses:
+        '200':
+          description: Returns the list of verticals
+          schema:
+            "$ref": "#/definitions/verticals/index/success"
+          examples:
+            application/json:
+              meta:
+                total: 5
+              links:
+                self: "/api/v1/verticals"
+              data:
+              - type: verticals
+                id: 2
+                attributes:
+                  name: Music
+    post:
+      summary: Creates a vertical record
+      tags:
+      - Verticals
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: vertical
+        in: body
+        schema:
+          type: object
+          properties:
+            vertical:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+          required:
+          - vertical
+      responses:
+        '201':
+          description: Creates vertical record
+          schema:
+            "$ref": "#definitions/verticals/show/success"
+          examples:
+            application/json:
+              links:
+                self: "/api/v1/verticals/2"
+              data:
+                type: verticals
+                id: 2
+                attributes:
+                  name: Music
+        '422':
+          description: Fails to create vertical record
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Name cannot be blank
+  "/api/v1/verticals/{id}":
+    get:
+      summary: Retrieves the vertical record
+      tags:
+      - Verticals
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Vertical Id
+        required: true
+      responses:
+        '200':
+          description: Retrieves vertical record
+          examples:
+            application/json:
+              links:
+                self: "/api/v1/verticals/1"
+              data:
+                type: verticals
+                id: 2
+                attributes:
+                  name: Music
+        '404':
+          description: Fails if vertical record cannot be found
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+    patch:
+      summary: Updates the vertical record
+      tags:
+      - Verticals
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Vertical Id
+        required: true
+      - name: vertical
+        in: body
+        schema:
+          type: object
+          properties:
+            vertical:
+              type: object
+              properties:
+                name:
+                  type: string
+          required:
+          - vertical
+      responses:
+        '200':
+          description: Updates vertical record
+          schema:
+            "$ref": "#definitions/verticals/show/success"
+          examples:
+            application/json:
+              links:
+                self: "/api/v1/verticals/1"
+              data:
+                type: verticals
+                id: 2
+                attributes:
+                  name: New Name
+        '422':
+          description: Fails to update vertical record due to validation errors
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Name cannot be blank
+        '404':
+          description: Fails to find vertical
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+    delete:
+      summary: Deletes the vertical record
+      tags:
+      - Verticals
+      consumes:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Vertical Id
+        required: true
+      responses:
+        '204':
+          description: Deletes the vertical record and returns no content
+        '404':
+          description: Fails to delete if vertical cannot be found
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+definitions:
+  errors:
+    type: object
+    required:
+    - errors
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          required:
+          - title
+          properties:
+            title:
+              type: string
+  verticals:
+    vertical:
+      vertical:
+        type: object
+        required:
+        - type
+        - id
+        - attributes
+        properties:
+          type:
+            type: string
+          id:
+            type: integer
+          attributes:
+            type: object
+            required:
+            - name
+            properties:
+              name:
+                type: string
+    index:
+      success:
+        type: object
+        required:
+        - meta
+        - links
+        - data
+        properties:
+          meta:
+            type: object
+            required:
+            - total
+            properties:
+              total:
+                type: integer
+          links:
+            type: object
+            required:
+            - self
+            properties:
+              self:
+                type: string
+          data:
+            type: array
+            items:
+              "$ref": "#/definitions/verticals/vertical"
+    show:
+      success:
+        type: object
+        required:
+        - links
+        - data
+        properties:
+          links:
+            type: object
+            required:
+            - self
+            properties:
+              self:
+                type: string
+          data:
+            "$ref": "#/definitions/verticals/vertical"
