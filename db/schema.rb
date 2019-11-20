@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_20_105604) do
+ActiveRecord::Schema.define(version: 2019_11_20_115022) do
 
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 2019_11_20_105604) do
     t.index ["vertical_id"], name: "index_categories_on_vertical_id"
   end
 
+  create_table "courses", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "state", null: false
+    t.string "author", null: false
+    t.integer "category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_courses_on_category_id"
+  end
+
   create_table "verticals", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -30,4 +40,5 @@ ActiveRecord::Schema.define(version: 2019_11_20_105604) do
   end
 
   add_foreign_key "categories", "verticals"
+  add_foreign_key "courses", "categories"
 end
