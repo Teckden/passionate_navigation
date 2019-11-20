@@ -43,6 +43,15 @@ RSpec.configure do |config|
           show: {
             success: JSON.load(Rails.root.join('spec/support/schemas/api/v1/verticals/show.json'))
           }
+        },
+        categories: {
+          category: JSON.load(Rails.root.join('spec/support/schemas/api/v1/categories/_category.json')),
+          index: {
+            success: JSON.load(Rails.root.join('spec/support/schemas/api/v1/categories/index.json'))
+          },
+          show: {
+            success: JSON.load(Rails.root.join('spec/support/schemas/api/v1/categories/show.json'))
+          }
         }
       }
     }

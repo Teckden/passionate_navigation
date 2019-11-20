@@ -4,6 +4,269 @@ info:
   title: API V1
   version: v1
 paths:
+  "/api/v1/verticals/{vertical_id}/categories":
+    get:
+      summary: Retrieves the list of categories that belong to the vertical
+      tags:
+      - Vertical Categories
+      parameters:
+      - name: vertical_id
+        in: path
+        schema:
+          type: string
+        description: Id of the Vertical record
+        required: true
+      responses:
+        '200':
+          description: List of categories
+          schema:
+            "$ref": "#/definitions/categories/index/success"
+          examples:
+            application/json:
+              meta:
+                total: 5
+              links:
+                self: "/api/v1/verticals/1/categories"
+              data:
+              - type: categories
+                id: 2
+                attributes:
+                  name: Booty & Abs
+                  state: active
+                relationships:
+                  vertical:
+                    links:
+                      self: "/api/v1/vertical/1"
+                    data:
+                      type: verticals
+                      id: 1
+        '404':
+          description: Fails to find vertical record
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+    post:
+      summary: Creates a category record
+      tags:
+      - Vertical Categories
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: vertical_id
+        in: path
+        schema:
+          type: string
+        description: Vertical ID
+        required: true
+      - name: category
+        in: body
+        schema:
+          type: object
+          properties:
+            category:
+              type: object
+              required:
+              - name
+              - state
+              properties:
+                name:
+                  type: string
+                state:
+                  type: string
+          required:
+          - category
+      responses:
+        '201':
+          description: Creates category record under vertical scope
+          schema:
+            "$ref": "#definitions/categories/show/success"
+          examples:
+            application/json:
+              links:
+                self: "/api/v1/verticals/1/categories/2"
+              data:
+                type: categories
+                id: 2
+                attributes:
+                  name: Booty & Abs
+                  state: active
+                relationships:
+                  vertical:
+                    links:
+                      self: "/api/v1/vertical/1"
+                    data:
+                      type: verticals
+                      id: 1
+        '422':
+          description: Fails to create category record
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Name cannot be blank
+        '404':
+          description: Fails to find vertical record
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+  "/api/v1/verticals/{vertical_id}/categories/{id}":
+    get:
+      summary: Retrieves the category record
+      tags:
+      - Vertical Categories
+      produces:
+      - application/json
+      parameters:
+      - name: vertical_id
+        in: path
+        schema:
+          type: string
+        description: Vertical ID
+        required: true
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Category ID
+        required: true
+      responses:
+        '200':
+          description: Retrieves category record
+          examples:
+            application/json:
+              links:
+                self: "/api/v1/verticals/1/categories/2"
+              data:
+                type: categories
+                id: 2
+                attributes:
+                  name: Booty & Abs
+                  state: active
+                relationships:
+                  vertical:
+                    links:
+                      self: "/api/v1/vertical/1"
+                    data:
+                      type: verticals
+                      id: 1
+        '404':
+          description: Fails if vertical or category record cannot be found
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+    patch:
+      summary: Updates the category record
+      tags:
+      - Vertical Categories
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: vertical_id
+        in: path
+        schema:
+          type: string
+        description: Vertical ID
+        required: true
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Category ID
+        required: true
+      - name: category
+        in: body
+        schema:
+          type: object
+          properties:
+            category:
+              type: object
+              properties:
+                name:
+                  type: string
+                state:
+                  type: string
+          required:
+          - category
+      responses:
+        '200':
+          description: Updates category record
+          schema:
+            "$ref": "#definitions/categories/show/success"
+          examples:
+            application/json:
+              links:
+                self: "/api/v1/verticals/1/categories/2"
+              data:
+                type: categories
+                id: 2
+                attributes:
+                  name: Booty & Abs
+                  state: active
+                relationships:
+                  vertical:
+                    links:
+                      self: "/api/v1/vertical/1"
+                    data:
+                      type: verticals
+                      id: 1
+        '422':
+          description: Fails to update category record due to validation errors
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Name cannot be blank
+        '404':
+          description: Fails to find vertical or category
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+    delete:
+      summary: Deletes the category record
+      tags:
+      - Vertical Categories
+      consumes:
+      - application/json
+      parameters:
+      - name: vertical_id
+        in: path
+        schema:
+          type: string
+        description: Vertical ID
+        required: true
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Category ID
+        required: true
+      responses:
+        '204':
+          description: Deletes the category record and returns no content
+        '404':
+          description: Fails to delete if vertical or category cannot be found
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
   "/api/v1/verticals":
     get:
       summary: Retrieves the list of verticals
@@ -260,3 +523,97 @@ definitions:
                 type: string
           data:
             "$ref": "#/definitions/verticals/vertical"
+  categories:
+    category:
+      category:
+        type: object
+        required:
+        - type
+        - id
+        - attributes
+        - relationships
+        properties:
+          type:
+            type: string
+          id:
+            type: integer
+          attributes:
+            type: object
+            required:
+            - name
+            - state
+            properties:
+              name:
+                type: string
+              state:
+                type: string
+          relationships:
+            type: object
+            required:
+            - vertical
+            properties:
+              vertical:
+                type: object
+                required:
+                - links
+                - data
+                properties:
+                  links:
+                    type: object
+                    required:
+                    - self
+                    properties:
+                      self:
+                        type: string
+                  data:
+                    type: object
+                    required:
+                    - type
+                    - id
+                    properties:
+                      type:
+                        type: string
+                      id:
+                        type: integer
+    index:
+      success:
+        type: object
+        required:
+        - meta
+        - links
+        - data
+        properties:
+          meta:
+            type: object
+            required:
+            - total
+            properties:
+              total:
+                type: integer
+          links:
+            type: object
+            required:
+            - self
+            properties:
+              self:
+                type: string
+          data:
+            type: array
+            items:
+              "$ref": "#/definitions/categories/category"
+    show:
+      success:
+        type: object
+        required:
+        - links
+        - data
+        properties:
+          links:
+            type: object
+            required:
+            - self
+            properties:
+              self:
+                type: string
+          data:
+            "$ref": "#/definitions/categories/category"
