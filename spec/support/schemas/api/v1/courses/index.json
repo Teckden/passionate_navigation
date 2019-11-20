@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "required": ["meta", "links", "data"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["total"],
+      "properties": {
+        "total": { "type":  "integer" }
+      }
+    },
+    "links": {
+      "type": "object",
+      "required": ["self"],
+      "properties": {
+        "self": { "type":  "string" }
+      }
+    },
+    "data": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/courses/course" }    }
+  }
+}

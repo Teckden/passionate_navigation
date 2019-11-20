@@ -1,0 +1,46 @@
+{
+  "course": {
+    "type": "object",
+    "required": ["type", "id", "attributes", "relationships"],
+    "properties": {
+      "type": { "type":  "string"},
+      "id": { "type":  "integer" },
+      "attributes": {
+        "type": "object",
+        "required": ["name", "state", "author"],
+        "properties": {
+          "name": { "type": "string" },
+          "state": { "type": "string" },
+          "author": { "type": "string" }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "required": ["category"],
+        "properties": {
+          "category": {
+            "type": "object",
+            "required": ["links", "data"],
+            "properties": {
+              "links": {
+                "type": "object",
+                "required": ["self"],
+                "properties": {
+                  "self": { "type":  "string" }
+                }
+              },
+              "data": {
+                "type": "object",
+                "required": ["type", "id"],
+                "properties": {
+                  "type": { "type":  "string"},
+                  "id": { "type":  "integer" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

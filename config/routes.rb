@@ -7,6 +7,10 @@ Rails.application.routes.draw do
       resources :verticals do
         resources :categories
       end
+
+      resources :categories do
+        resources :courses
+      end
     end
   end
 end

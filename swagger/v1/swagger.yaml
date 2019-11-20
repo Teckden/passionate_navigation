@@ -267,6 +267,276 @@ paths:
             application/json:
               errors:
               - title: Not found error
+  "/api/v1/categories/{category_id}/courses":
+    get:
+      summary: Retrieves the list of courses that belong to the category
+      tags:
+      - Category Courses
+      parameters:
+      - name: category_id
+        in: path
+        schema:
+          type: string
+        description: Category ID
+        required: true
+      responses:
+        '200':
+          description: List of courses
+          schema:
+            "$ref": "#/definitions/courses/index/success"
+          examples:
+            application/json:
+              meta:
+                total: 5
+              links:
+                self: "/api/v1/categories/1/courses"
+              data:
+              - type: courses
+                id: 2
+                attributes:
+                  name: Build a Wild Audience
+                  state: active
+                  author: Harry
+                relationships:
+                  category:
+                    links:
+                      self: "/api/v1/categories/1"
+                    data:
+                      type: categories
+                      id: 1
+        '404':
+          description: Fails to find category record
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+    post:
+      summary: Creates a course record
+      tags:
+      - Category Courses
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: category_id
+        in: path
+        schema:
+          type: string
+        description: Category ID
+        required: true
+      - name: course
+        in: body
+        schema:
+          type: object
+          properties:
+            course:
+              type: object
+              required:
+              - name
+              - state
+              - author
+              properties:
+                name:
+                  type: string
+                state:
+                  type: string
+                author:
+                  type: string
+          required:
+          - course
+      responses:
+        '201':
+          description: Creates course record under category scope
+          schema:
+            "$ref": "#definitions/courses/show/success"
+          examples:
+            application/json:
+              links:
+                self: "/api/v1/categories/1/courses/2"
+              data:
+                type: courses
+                id: 2
+                attributes:
+                  name: Build Audience
+                  state: active
+                  author: Harry
+                relationships:
+                  category:
+                    links:
+                      self: "/api/v1/categories/1"
+                    data:
+                      type: categories
+                      id: 1
+        '422':
+          description: Fails to create course record
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Name cannot be blank
+        '404':
+          description: Fails to find category record
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+  "/api/v1/categories/{category_id}/courses/{id}":
+    get:
+      summary: Retrieves the course record
+      tags:
+      - Category Courses
+      produces:
+      - application/json
+      parameters:
+      - name: category_id
+        in: path
+        schema:
+          type: string
+        description: Category ID
+        required: true
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Course ID
+        required: true
+      responses:
+        '200':
+          description: Retrieves course record
+          examples:
+            application/json:
+              links:
+                self: "/api/v1/categories/1/courses/2"
+              data:
+                type: courses
+                id: 2
+                attributes:
+                  name: Build Audience
+                  state: active
+                  author: Harry
+                relationships:
+                  category:
+                    links:
+                      self: "/api/v1/categories/1"
+                    data:
+                      type: categories
+                      id: 1
+        '404':
+          description: Fails if category or course record cannot be found
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+    patch:
+      summary: Updates the course record
+      tags:
+      - Category Courses
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: category_id
+        in: path
+        schema:
+          type: string
+        description: Category ID
+        required: true
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Course ID
+        required: true
+      - name: course
+        in: body
+        schema:
+          type: object
+          properties:
+            course:
+              type: object
+              properties:
+                name:
+                  type: string
+                state:
+                  type: string
+          required:
+          - course
+      responses:
+        '200':
+          description: Updates course record
+          schema:
+            "$ref": "#definitions/categories/show/success"
+          examples:
+            application/json:
+              links:
+                self: "/api/v1/categories/1/courses/2"
+              data:
+                type: courses
+                id: 2
+                attributes:
+                  name: Build Audience
+                  state: active
+                  author: Harry
+                relationships:
+                  category:
+                    links:
+                      self: "/api/v1/categories/1"
+                    data:
+                      type: categories
+                      id: 1
+        '422':
+          description: Fails to update course record due to validation errors
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Name cannot be blank
+        '404':
+          description: Fails to find category or course
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
+    delete:
+      summary: Deletes the course record
+      tags:
+      - Category Courses
+      consumes:
+      - application/json
+      parameters:
+      - name: category_id
+        in: path
+        schema:
+          type: string
+        description: Category ID
+        required: true
+      - name: id
+        in: path
+        schema:
+          type: string
+        description: Course ID
+        required: true
+      responses:
+        '204':
+          description: Deletes the course record and returns no content
+        '404':
+          description: Fails to delete if category or course cannot be found
+          schema:
+            "$ref": "#/definitions/errors"
+          examples:
+            application/json:
+              errors:
+              - title: Not found error
   "/api/v1/verticals":
     get:
       summary: Retrieves the list of verticals
@@ -617,3 +887,100 @@ definitions:
                 type: string
           data:
             "$ref": "#/definitions/categories/category"
+  courses:
+    course:
+      course:
+        type: object
+        required:
+        - type
+        - id
+        - attributes
+        - relationships
+        properties:
+          type:
+            type: string
+          id:
+            type: integer
+          attributes:
+            type: object
+            required:
+            - name
+            - state
+            - author
+            properties:
+              name:
+                type: string
+              state:
+                type: string
+              author:
+                type: string
+          relationships:
+            type: object
+            required:
+            - category
+            properties:
+              category:
+                type: object
+                required:
+                - links
+                - data
+                properties:
+                  links:
+                    type: object
+                    required:
+                    - self
+                    properties:
+                      self:
+                        type: string
+                  data:
+                    type: object
+                    required:
+                    - type
+                    - id
+                    properties:
+                      type:
+                        type: string
+                      id:
+                        type: integer
+    index:
+      success:
+        type: object
+        required:
+        - meta
+        - links
+        - data
+        properties:
+          meta:
+            type: object
+            required:
+            - total
+            properties:
+              total:
+                type: integer
+          links:
+            type: object
+            required:
+            - self
+            properties:
+              self:
+                type: string
+          data:
+            type: array
+            items:
+              "$ref": "#/definitions/courses/course"
+    show:
+      success:
+        type: object
+        required:
+        - links
+        - data
+        properties:
+          links:
+            type: object
+            required:
+            - self
+            properties:
+              self:
+                type: string
+          data:
+            "$ref": "#/definitions/courses/course"

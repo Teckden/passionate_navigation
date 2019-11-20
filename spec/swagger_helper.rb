@@ -52,6 +52,15 @@ RSpec.configure do |config|
           show: {
             success: JSON.load(Rails.root.join('spec/support/schemas/api/v1/categories/show.json'))
           }
+        },
+        courses: {
+          course: JSON.load(Rails.root.join('spec/support/schemas/api/v1/courses/_course.json')),
+          index: {
+            success: JSON.load(Rails.root.join('spec/support/schemas/api/v1/courses/index.json'))
+          },
+          show: {
+            success: JSON.load(Rails.root.join('spec/support/schemas/api/v1/courses/show.json'))
+          }
         }
       }
     }

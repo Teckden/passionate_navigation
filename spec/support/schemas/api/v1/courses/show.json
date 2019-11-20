@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "required": ["links", "data"],
+  "properties": {
+    "links": {
+      "type": "object",
+      "required": ["self"],
+      "properties": {
+        "self": { "type":  "string" }
+      }
+    },
+    "data": { "$ref": "#/definitions/courses/course" }
+  }
+}
