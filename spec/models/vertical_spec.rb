@@ -5,5 +5,6 @@ RSpec.describe Vertical, type: :model do
     it { is_expected.to be_valid }
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_uniqueness_of(:name) }
+    it { is_expected.to have_many(:categories).dependent(:destroy) }
   end
 end

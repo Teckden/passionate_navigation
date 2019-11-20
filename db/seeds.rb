@@ -5,3 +5,7 @@ require 'json'
 JSON.load(Rails.root.join('db/data/verticals.json')).each do |row|
   Vertical.find_or_create_by!(name: row['Name'], id: row['Id'])
 end
+
+JSON.load(Rails.root.join('db/data/categories.json')).each do |row|
+  Category.find_or_create_by!(name: row['Name'], state: row['State'], vertical_id: row['Verticals'])
+end
